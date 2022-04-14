@@ -1,0 +1,67 @@
+# BFS를 레이더망처럼 사용하는 방법
+from collections import deque
+
+n = 10
+MAP = [[0]*n for _ in range(n)]
+
+dx = [1,-1,0,0]
+dy = [0,0,1,-1]
+
+def bfs(x,y,board):
+    q = deque([(x,y)])
+    cost = 1
+    board[x][y] = cost
+    while q:
+        cur = q.popleft()
+        
+        for i in range(4):
+            xx = dx[i] + cur[0]
+            yy = dy[i] + cur[1]
+            if 0 <= xx < n and 0 <= yy < n and not board[xx][yy]:
+
+                board[xx][yy] = board[cur[0]][cur[1]] +1
+                q.append((xx,yy))
+        
+bfs(5,5, MAP)
+
+for _ in MAP:
+    print(_)
+
+
+# 2차원 리스트에서 2차원 추출하고, 회전시키는 인덱싱
+
+MAP = [[i*j for i in range(8)] for j in range(8)]
+for row in MAP:
+    print(row)
+print()
+
+for r in range(0,len(MAP),2):
+    for c in range(0, len(MAP), 2):
+        piece = [indexed_row[c:c+2] for indexed_row in MAP[r:r+2]]
+        
+        for row in piece:
+            print(row)
+        print()
+
+        # rotated_piece = [[None]*len(piece) for _ in range(len(piece))]
+
+        # for i in range(len(rotated_piece)):
+        #     for j in range(len(rotated_piece)-1, -1, -1):
+        #         rotated_piece[len(piece) - i - 1][j] = piece[j][i]
+
+        # CCW
+        rotated_piece = list(zip(*piece))[::-1]
+
+        # CW
+        rotated_piece = list(zip(*piece[::-1]))
+
+
+        final_piece = [[None]*len(rotated_piece) for _ in range(len(rotated_piece))]
+
+        for j in range(len(rotated_piece)):
+            for k in range(len(rotated_piece)):
+                final_piece[j][k] = rotated_piece[j][k]
+
+        for row in final_piece:
+            print(row)
+        print()
