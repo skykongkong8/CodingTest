@@ -37,7 +37,7 @@ print()
 
 for r in range(0,len(MAP),2):
     for c in range(0, len(MAP), 2):
-        piece = [indexed_row[c:c+2] for indexed_row in MAP[r:r+2]]
+        piece = [indexed_row[c:c+2] for indexed_row in MAP[r:r+2]] # 이거진짜 유용함
         
         for row in piece:
             print(row)
@@ -65,3 +65,7 @@ for r in range(0,len(MAP),2):
         for row in final_piece:
             print(row)
         print()
+
+# 3. 1차원 리스트가 꼬리에 꼬리를 물고 회전하도록 하기
+MAP = [i for i in range(10)]
+MAP = [MAP[-1]] + MAP[:-1]

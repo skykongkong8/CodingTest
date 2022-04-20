@@ -1,7 +1,6 @@
-total_dsnb = [0,1,2,3]
-dsnb = 1
-going_direction = dsnb
-reverse_direction =0
-total_dsnb.remove(going_direction)
-total_dsnb.remove(reverse_direction)
-print(total_dsnb)
+original_map = [i*i for i in range(7)]
+
+tmp_map = original_map[:]
+tmp_map[0] = 9999
+
+print(original_map)
