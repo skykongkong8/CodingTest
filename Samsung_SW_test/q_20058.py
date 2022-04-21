@@ -115,7 +115,7 @@ if __name__ == "__main__":
 
     print(total_ice)
     print(maxSize)
-    
+  
 
 """
 교훈

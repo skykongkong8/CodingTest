@@ -1,4 +1,5 @@
 # 어항 정리
+
 from collections import deque
 def input_getter():
     N, K = map(int, input().split(' '))
@@ -150,11 +151,11 @@ def step_4(MAP, N, currentZeroRowHeight, current_zero_index):
     ]
     """
     visited_map = []
-    r = N-1
-    c = 0
-    queue = deque()
-    queue.append([r,c])
-    visited_map.append([r,c])
+    # r = N-1
+    # c = 0
+    # queue = deque()
+    # queue.append([r,c])
+    # visited_map.append([r,c])
 
     # DFS 로 하니 발생한 문제: 이미 전에 방문한 애는 다른 애에서 관계형성이 카운트가 안됨 
     # (딱 1회씩 모든 애들이 combinations 되어야 하는데 각각에 대한 최단 경로로까지만 관계가 맺어짐)
@@ -410,7 +411,7 @@ if __name__ == "__main__":
 
 1. 행렬을 꺼내서 같다 붙이기 테크닉 거의 마스터 : row별로 받아오기, column별로 받아오기, 복잡한 인덱싱하기
 2. 행렬 회전시킬 때 테크닉 기억하기 : list(zip(*piece[::-1])) : CW 아니면 list(zip(*piece))[::-1] : CCW
-3. 가끔씩은 그냥 구조상 하드코딩이 훨씬 편할 수도 있다.
+3. 가끔씩은 그냥 구조상 하드코딩이 훨씬 편할 수도 있다. 이건 코테니까!
 4. 어짜피 디버깅은 해야함 -> 단계별로 하나씩 print 해보면서 진행하자
 5. 임의로 만든 자료구조를 계속해서 써주는 습관은 매우 좋은 것 같다. 인덱싱이나, 알고리즘 구현 실수를 막아준다.
 6. 하나씩 모두를 짝찌을 때, DFS/BFS는 각각에 대한 최단 경로 edge만을 형성하므로 모두에 대한 하나짝찟기는 안된다.
