@@ -69,3 +69,19 @@ for r in range(0,len(MAP),2):
 # 3. 1차원 리스트가 꼬리에 꼬리를 물고 회전하도록 하기
 MAP = [i for i in range(10)]
 MAP = [MAP[-1]] + MAP[:-1]
+
+# 4. dice 모델링 아이디어
+"""
+dice = [
+    TOP,
+    동,
+    서,
+    남,
+    북,
+    BOTTOM
+]
+동쪽(X)으로 가면 -> 동(X)이 curTOP (= 서(X')가 curBOTTOM), 남and북 유지, TOP이 cur서 (= BOTTOM이 cur동),  
+YAW 회전:
+CW -> TOP/BOTTOM유지, 남이 cur동(= 북이 cur서), 동이 cur북 (= 서가 cur남)
+CCW -> TOP/BOTTOM유지, 남이 cur서(= 북이 cur동), 동이 cur남 (= 서가 cur북) 
+"""
