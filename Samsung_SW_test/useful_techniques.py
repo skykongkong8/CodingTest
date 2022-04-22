@@ -85,3 +85,7 @@ YAW 회전:
 CW -> TOP/BOTTOM유지, 남이 cur동(= 북이 cur서), 동이 cur북 (= 서가 cur남)
 CCW -> TOP/BOTTOM유지, 남이 cur서(= 북이 cur동), 동이 cur남 (= 서가 cur북) 
 """
+
+# 5. index bounding
+
+# 6.  

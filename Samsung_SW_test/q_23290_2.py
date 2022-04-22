@@ -1,4 +1,5 @@
 # 마법사 상어와 복제
+import sys
 
 dr = [0,-1,-1,-1,0,1,1,1]
 dc = [-1,-1,0,1,1,1,0,-1]
@@ -36,14 +37,14 @@ def MAP_printer(MAP):
 
 def input_getter():
     # MAP = [[[[0,[]], 0]]*4 for _ in range(4)] # -> 파이썬 그 4차원 이상 들어가면 메모리 복제된다는 그 문제인가?
-    M, S = map(int, input().split(' '))
+    M, S = map(int, sys.stdin.readline().split(' '))
 
     for _ in range(M):
-        r, c, d = map(int, input().split(' '))
+        r, c, d = map(int, sys.stdin.readline().split(' '))
         MAP[r-1][c-1][0][0] += 1
         MAP[r-1][c-1][0][1].append(d-1)
 
-    shark_r, shark_c = map(int, input().split(' '))
+    shark_r, shark_c = map(int, sys.stdin.readline().split(' '))
 
     return MAP, M, S, [shark_r-1, shark_c-1]
 def fishMove(MAP, shark_idx):
@@ -57,7 +58,7 @@ def fishMove(MAP, shark_idx):
         ...
     ]
     """
-
+    MAP_printer(MAP)
     for i in range(4):
         for j in range(4):
             curFishCnt = MAP[i][j][0][0]
@@ -178,67 +179,10 @@ def fishMove(MAP, shark_idx):
 
 #     return MAP, OLD_MAP
 
-
-# 재귀적으로 구현하기 위한 visited map 등의 각종 변수 선언:
-max_fish_count = -1
-optimal_path = []
-visited = [[False]*4 for _ in range(4)]
-
-def get_shark_routes_with_dfs(MAP, shark_idx, move_count, fish_count, tmp_path):
-    global visited, max_fish_count, optimal_path
-
-    if move_count == 3:
-        if fish_count > max_fish_count:
-            max_fish_count = fish_count
-            optimal_path = [d for d in tmp_path]
-
-        elif fish_count == max_fish_count:
-            if optimal_path:
-                tmp_path_num = 100*(1+tmp_path[0]) + 10 * (1+tmp_path[1]) + (1+tmp_path[2])
-                curopt_path_num = 100*(1+optimal_path[0]) + 10 * (1+optimal_path[1]) + (1+optimal_path[2])
-                if tmp_path_num < curopt_path_num:
-                    optimal_path = [d for d in tmp_path]
-        return
-
-    currentR, currentC = shark_idx[0], shark_idx[1]
-
-    for d in range(4):
-        tmp_r, tmp_c = currentR+shark_dr[d], currentC+shark_dc[d]
-        if 0 <= tmp_r < N and 0 <= tmp_c < N:
-            if not visited[tmp_r][tmp_c]:
-                visited[tmp_r][tmp_c] = True
-                nxt_fish_cnt = fish_count + MAP[tmp_r][tmp_c][0][0]
-                get_shark_routes_with_dfs(MAP, [tmp_r, tmp_c], move_count+1, nxt_fish_cnt, tmp_path+[d])
-                visited[tmp_r][tmp_c] = False
-
-            else: # 이미 방문한 곳이라면 물고기가 이미 0일 것이므로
-                get_shark_routes_with_dfs(MAP, [tmp_r, tmp_c], move_count+1, fish_count, tmp_path+[d])
-                 
-def move_shark_from_dfs(MAP, shark_idx):
-    global optimal_path, max_fish_count
-    max_fish_count = -1
-    curR, curC = shark_idx[0], shark_idx[1]
-    get_shark_routes_with_dfs(MAP, shark_idx, 0, 0, [])
-    # print(f"optimal path : {optimal_path}")
-    for dir in optimal_path:
-
-        curR, curC = curR+shark_dr[dir], curC+shark_dc[dir]
-        # print(f"shark Move! {curR}, {curC}\n")
-
-        if MAP[curR][curC][0][0] != 0:
-            MAP[curR][curC][0][0] = 0
-            MAP[curR][curC][0][1] = []
-            MAP[curR][curC][1] = 2 #3?
-
-    shark_idx = [curR, curC]
-    return MAP, shark_idx
-
-
-
-
 def move_shark(MAP, shark_idx):
     
     curR, curC = shark_idx[0], shark_idx[1]
+    # print(f"START MOVE SHARK AT : {curR}, {curC}")
     possible_routes = []
     """
     possible_routes = [
@@ -249,7 +193,7 @@ def move_shark(MAP, shark_idx):
     """
 
     # DFS 같은걸로 안되지 않나, 모든 경우를 무조건 다해보아야하니까 (최단경로가 아니라)
-    optimal_route = [[0,0,0,111],0]
+    optimal_route = [[-1,-1,-1,0],-1] # init은 그냥 전부 해당사항이 없는걸로 맞춰주어야 한다.
     """
     optimal_route = [[j,k,l,RouteNumber], TotalFishNum]
 
@@ -259,47 +203,66 @@ def move_shark(MAP, shark_idx):
         tmp_r, tmp_c = curR + shark_dr[j], curC + shark_dc[j]
         if 0 <= tmp_r < N and 0 <= tmp_c < N:
             first_fish = MAP[tmp_r][tmp_c][0][0]
+            # print(f"direction : {j} | tmp_r : {tmp_r}, tmp_c : {tmp_c}, fish1 : {first_fish}\n")
+
             for k in range(4):
                 tmp_tmp_r, tmp_tmp_c = tmp_r + shark_dr[k], tmp_c + shark_dc[k]
                 if 0 <= tmp_tmp_r < N and 0 <= tmp_tmp_c < N:
-                    if [tmp_tmp_r, tmp_tmp_c] == [tmp_r, tmp_c]:
+
+                    if [tmp_tmp_r, tmp_tmp_c] == [tmp_r, tmp_c] or [tmp_tmp_r, tmp_tmp_c] == [curR, curC]:
                         second_fish = 0
                     else:
                         second_fish = MAP[tmp_tmp_r][tmp_tmp_c][0][0]
+                    # print(f"direction : {k} |tmp_tmp_r : {tmp_tmp_r}, tmp_tmp_c : {tmp_tmp_c}, fish2 : {second_fish}\n")
+
                     for l in range(4):
                         tmp_tmp_tmp_r, tmp_tmp_tmp_c = tmp_tmp_r + shark_dr[l], tmp_tmp_c + shark_dc[l]
                         if 0 <= tmp_tmp_tmp_r < N and 0 <= tmp_tmp_tmp_c < N:
-                            if [tmp_tmp_tmp_r, tmp_tmp_tmp_c] == [tmp_tmp_r, tmp_tmp_c] or [tmp_tmp_tmp_r, tmp_tmp_tmp_c] == [tmp_r, tmp_c]:
+
+                            if [tmp_tmp_tmp_r, tmp_tmp_tmp_c] == [tmp_tmp_r, tmp_tmp_c] or [tmp_tmp_tmp_r, tmp_tmp_tmp_c] == [tmp_r, tmp_c] or [tmp_tmp_tmp_r, tmp_tmp_tmp_c] == [curR, curC]:
                                 third_fish = 0
                             else:
                                 third_fish = MAP[tmp_tmp_tmp_r][tmp_tmp_tmp_c][0][0]
+                            # print(f"direction : {l} | tmp_tmp_tmp_r : {tmp_tmp_tmp_r}, tmp_tmp_tmp_c : {tmp_tmp_tmp_c}, fish3 : {third_fish}\n")
 
                             currentRoute = [[j,k,l, (j+1)*100 + (k+1)*10 + (l+1)], first_fish + second_fish + third_fish]
+                            """
+                            optimal_route = [[j,k,l,RouteNumber], TotalFishNum]
+
+                            차라리 sort를 안해도 되게 여기서 필터링을 해보자.
+                            """
                             if optimal_route[1] < currentRoute[1]:
                                 optimal_route = currentRoute[:]
+                                # print(f"Route update! : {optimal_route}")
                             
                             elif optimal_route[1] == currentRoute[1]:
                                 if optimal_route[0][-1] > currentRoute[0][-1]:
                                     optimal_route = currentRoute[:]
+                                    # print(f"Route update! : {optimal_route}")
+
 
 
                             possible_routes.append(currentRoute)
 
     # DFS로 해도 되는 것으로 판명났다. 아마 여기를 알고리즘적으로 해결하지 않고 BruteForce로 해결해서 시간 초과가 뜬 것 같다.
-    # Brute Force로 하면 탐색도 오래걸리고, 추후 sort도 해줘야 하므로 두배로 시간이 오래 걸린다
+    # Brute Force로 하면 탐색도 오래걸리고, 추후 sort도 해줘야 하므로 두배로 시간이 오래 걸린다 ->-> sort를 미리 필터링 업데이트를 통해 해결하자
+
     # 왜? 그리고 어떻게?
 
-    
-    possible_routes.sort(key= lambda a : (-a[1], a[0][3]))
-    optimal_route = possible_routes[0][0][:-1]
-    # optimal_route = optimal_route[0][:-1]
+    print(f"optimal_route {optimal_route[0][:-1]}")
+
+
+    # possible_routes.sort(key= lambda a : (-a[1], a[0][3]))
+    # optimal_route = possible_routes[0][0][:-1]
+    # print(f"actual_optimal_route : {optimal_route}\n")
+    optimal_route = optimal_route[0][:-1]
 
     # 상어의 움직임 : 움직인 칸마다 = 물고기 0 + 물고기 냄새
     # print(f"possibles : {possible_routes}")
     # print(f"shark will move like: {possible_routes[0][0]}")
     for dir in optimal_route:
         curR, curC = curR+shark_dr[dir], curC+shark_dc[dir]
-        # print(f"shark Move! {curR}, {curC}\n")
+        # print(f"shark Move! {curR}, {curC} with direction {dir}\n")
 
         if MAP[curR][curC][0][0] != 0:
             MAP[curR][curC][0][0] = 0
@@ -351,10 +314,7 @@ def main(MAP, shark_idx):
 
     MAP = fishSmell_fadeAway(MAP)
     
-    # MAP, shark_idx = move_shark(MAP, shark_idx)
-    MAP, shark_idx = move_shark_from_dfs(MAP, shark_idx)
-
-
+    MAP, shark_idx = move_shark(MAP, shark_idx)
     # print("after sharkMove :")
     # MAP_printer(MAP)
 
@@ -382,3 +342,14 @@ if __name__ == "__main__":
 
     ans = get_answer(MAP)
     print(ans)
+
+"""
+배운점 :
+
+1. N차원 리스트 자료구조에 모든 것을 담으려 하면 메모리가 꼬이는 일이 발생할 수 있다.
+    깊이가 깊은 메모리를 하나하나 참조하여 접근하거나, 복사하는 것 자체가 연산량이 많이 드는 작업이다.
+    따라서, 다차원의 리스트를 만드는 것은 최대 2,3차원까지가 적당하고 그 이상은 다른 1,2차원의 보조 자료구조를
+    생성하는 것이 바람직하다.
+
+
+"""
