@@ -91,4 +91,58 @@ CCW -> TOP/BOTTOM유지, 남이 cur서(= 북이 cur동), 동이 cur남 (= 서가
 
 # 5. index bounding
 
-# 6.  
+# 6.  spiral indexing transformation
+
+"""
+골뱅이 모양 나선형 인덱스를 이해하는 방법 :
+회전이라는 요소를 위아래방향, 좌우 방향으로 분해하여서 생각하면 뭔가 느낌이 온다.
+"""
+
+def spiral_matrix(N):
+    dr = [0,1,0,-1]
+    dc = [1,0,-1,0]
+
+    direction = 0
+
+    cnt = 0
+
+    r = 0
+    c = 0
+
+    right = N-1
+    down = N -1
+    left = 0
+    up = 1
+
+    MAP = [[0]*N for _ in range(N)]
+    for _ in range(N**2):
+        # MAP[r][c] = cnt
+        MAP[r][c] = (cnt - (N**2))*(-1)
+        cnt +=1
+
+        if direction %4 == 0 and c == right:
+            direction += 1
+            right -=1
+        elif direction %4 == 1 and r == down:
+            direction += 1
+            down -=1
+        elif direction%4 == 2 and c == left:
+            direction +=1
+            left +=1
+        elif direction%4 == 3 and r == up:
+            direction +=1
+            up +=1
+        r += dr[direction%4]
+        c += dc[direction%4]
+    return MAP
+
+sprialMAP = spiral_matrix(5)
+for row in sprialMAP:
+    print(row)
+print()
+
+"""
+나머지는 cnt를 연산을 통해서 조절하거나,
+dr dc의 방향 순서를 조절하거나,
+rot = [list(row) for row in list(zip(*matrix[::-1]))] 을 통해서 해결할 수 있다.
+"""

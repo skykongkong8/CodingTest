@@ -1,16 +1,10 @@
-start = 0
-def make_new_player():
-    return [0, start, False]
+my_list = [i for i in range(10)]
+tmp = None
+for i in range(10):
+    cur = my_list[i]
+    if tmp is not None:
+        print(cur)
+        print(tmp)
 
-plist = [make_new_player() for _ in range(4)]
 
-plist[0][0] +=1
-print(plist)
-
-
-from itertools import product
-
-lists = product(range(2), range(2), range(2))
-
-for i in lists:
-    print(i)
+    tmp= cur
