@@ -51,9 +51,12 @@ for r in range(0,len(MAP),2):
 
         # CCW
         rotated_piece = list(zip(*piece))[::-1]
+        rotated_piece = [list(row) for row in rotated_piece]
 
         # CW
         rotated_piece = list(zip(*piece[::-1]))
+        rotated_piece = [list(row) for row in rotated_piece]
+
 
 
         final_piece = [[None]*len(rotated_piece) for _ in range(len(rotated_piece))]
