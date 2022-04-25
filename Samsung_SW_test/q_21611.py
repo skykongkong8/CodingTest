@@ -161,6 +161,7 @@ def strech_crushedMarbles(MAP, linearized_spiralMAP, N):
                 zeroFoundFlag = False
                 # 이렇게하면 마지막에 zeroTail은 어떻게 되는거지?
                 # -> ZeroFoundFlag가 켜진 후에, MAP[r][c]가 0이 아닌 구간이 없기 때문에, 그냥 넘어갈듯..?
+
     # print(f"l map : {linearizedMAP}")
     if zeroStartEndIndicies:
         # print(f"zero indicies : {zeroStartEndIndicies}")
@@ -339,4 +340,21 @@ if __name__ == "__main__":
 
     - spiralMAP, spiralIndexLinearMap, LinearMAP 세가지를 모두 형성한다.
     - component간의 연산을 이러한 방식을 통해 주고받자.
+
+5. linear한 Grouping이나 영역을 정해보고자 할 때, 첫 항은 먼저 빼준다는 느낌으로 하고 들어간다는 것을 알자. 처음 들어가서 비교하면서
+    진행해야 하기 때문에, 모든 것을 한 iteration 이미 해줬다고 생각해야 한다.
+    즉,  range, count하는Data 등을 모두 하나씩은 처리를 해준다. 이러저러한 flag를 두어서 한 반복문 내에서 다채로운 작업이 가능하도록
+    하면 편리하다.
+
+6. 한 반복문 내에서 flag를 통해 두 가지 작업을 시행할 수 있다.
+    처음 발견하였을 때 flag를 세워두고,
+    flag라면 다른 연산을 할 때까지 기다려 둔 뒤, 해당 연산을 그만해야한다는 조건을 발견하면 flag를 내려주면 된다.
+
+7. 한 반복문을 돌면서 이전 반복문에서 사용하였던 변수를 넘겨 받는 기술 역시 재확인할 수 있었다.
+    None 등으로 초기화시켜 놓고, 별도의 변수에 저장하여 놓으면 if not None, 등의 조건을 활용해 1회 이후의 iteration부터
+    다음 iteration으로 변수를 넘겨 줄 수 있다. 단, 변수를 업데이트해받는 코드 앞쪽에 짜야할 것.
+
+8. 조건문을 쓸 때 그 순서상의 배열과 if/elif 등에 따라 어떠한 의미상의 차이가 발생할 수 있는지 재인지하자. 사실 당연한 이야기이지만,
+    머리속에 생각한 아이디어를 그냥 단순하게 옮겨 적다 보면 간과하고 넘어갈 수 있는 부분이기도 해서..
+    이번 iteration 안에서 어떠어떠한 일들이 한꺼번에/혹은 단발적으로만 벌어져야 하는지 잘 고민하자.
 """
