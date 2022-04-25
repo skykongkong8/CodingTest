@@ -1,2 +1,9 @@
-my_list = [1,1,3,3,4,4,5,5,66,6,6,6,6,6,6,6,6,6,6,7]
-print(my_list.count(6))
+matrix = [[i*j for i in range(1,10)] for j in range(1,10)]
+
+rot_matrix = [list(row) for row in list(zip(*matrix[::-1]))]
+
+
+
+print(matrix)
+
+print(rot_matrix)
