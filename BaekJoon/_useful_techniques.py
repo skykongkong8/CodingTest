@@ -89,7 +89,21 @@ CW -> TOP/BOTTOM유지, 남이 cur동(= 북이 cur서), 동이 cur북 (= 서가 
 CCW -> TOP/BOTTOM유지, 남이 cur서(= 북이 cur동), 동이 cur남 (= 서가 cur북) 
 """
 
-# 5. index bounding
+# 5. index bounding 의 아이디어 잘 기억하기
+def index_bounder(r, c, N):
+    """0번 인덱스와 마지막 인덱스(N-1)를 계속해서 이어주기 위한 함수"""
+
+    if r < 0:
+        r += N
+    elif r >=N:
+        r -= N
+
+    if c < 0:
+        c += N
+    elif c >=N:
+        c -= N
+
+    return r, c
 
 # 6.  spiral indexing transformation
 
@@ -229,13 +243,13 @@ print("linearized matrix")
 print(linearized_matrix)
 
 
-# Connected Components 깔끔한 정리:
+#7. Connected Components 깔끔한 정리:
 """
 KeyPoints:
 
 - 처음 init을 가져올 때 조건을 잘 건다.
     결국 DFS할 init을 찾고, 그 init으로 맞는 조건 안에서 DFS 하는 것이므로
-    
+
 - global_visited 와 local_visited를 활용하기:
     global_visited : connected component라고 확정적으로 정해진 순간에만 True 표시
     ** local_visited ** : 내부 DFS 돌면서 visited 표시하는 것. N_4나 N_8기준으로 찾고자 하는 connected component보다 한 겹씩 더 방문해있음
@@ -243,7 +257,7 @@ KeyPoints:
 
 """
 
-#1 MAP creation
+#7-1 MAP creation
 connected_components_map = [[0]*10 for _ in range(10)]
 for i in range(0,2):
     connected_components_map[i][3:6] = [1]*(6-3)
@@ -264,7 +278,7 @@ def MAP_printer(MAP):
 
 MAP_printer(connected_components_map)
 
-#2 DFS로 찾기
+#7-2 DFS로 찾기
 from collections import deque
 dr = [0,1,0,-1]
 dc = [1,0,-1,0]
@@ -311,13 +325,13 @@ def find_connected_components(MAP):
                                         this_group_index.append([tmp_r, tmp_c])
                                         global_visited[tmp_r][tmp_c] = True
                                         queue.append([tmp_r, tmp_c])
-                    
+                    # MAP_printer(local_visited) # -> local visited는 Neighbor 기준 한 겹 더 감싸놓은 형국이라고 할 수 있다. N4 or N8 등
                     global_components_indicies.append(this_group_index)
                         
     return global_components_indicies
                     
 
-                        
+#3 활용하는 기능 등                      
 def numbering_connected_components(components_indicies, MAP):
     numberedMAP = MAP[:]
     component_numbering = 0

@@ -23,7 +23,6 @@ MAP_printer(connected_components_map)
 
 #2 DFS로 찾기
 from collections import deque
-from threading import local
 dr = [0,1,0,-1]
 dc = [1,0,-1,0]
 def find_connected_components(MAP):
