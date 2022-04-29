@@ -56,6 +56,7 @@ class BabyShark():
         return fish_list
 
     def _bfs(self):
+
         flag = False
 
         queue = deque()

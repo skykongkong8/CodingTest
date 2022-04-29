@@ -49,27 +49,48 @@ def get_chicken_distance(chickens_indicies, home_r, home_c, N):
         distance = min(tmp_chicken_distance, distance)
     return distance
 
+total_combinations_list = []
+def combinations(queue, depth, r, target_list):
+    global total_combinations_list
+    n = len(target_list)
+    if len(queue) == r:
+        total_combinations_list.append(list(queue))
+        return
+        
+    elif depth == n:
+        return
 
-def combinations(oneDarray, r):
-    total_combinations = []
-    n = len(oneDarray)
-    
-    for i in range(n):
-        queue = deque()
-        queue.append(oneDarray[i])
-        while queue:
-            curNum = queue.pop()
+    queue.append(target_list[depth])
+    combinations(queue, depth+1,r,target_list)
 
+    queue.pop()
+    combinations(queue, depth+1,r,target_list)
 
+def compute_minimum_chicken_distance(MAP, N, M, house_indicies, chicken_indicies):
+    global total_combinations_list
+    total_combinations_list = []
+    combinations(deque(), 0, M, chicken_indicies)
+    all_possible_chicken_indicies_combinations = total_combinations_list
+    optimal_chicken_distance = float('inf')
 
-
-
-
+    for possible_chicken_indicies in all_possible_chicken_indicies_combinations:
+        total_city_chicken_distance = 0
+        for h in range(len(house_indicies)):
+            houseR, houseC = house_indicies[h][0], house_indicies[h][1]
+            chicken_distance = get_chicken_distance(possible_chicken_indicies, houseR, houseC, N)
+            total_city_chicken_distance += chicken_distance
+        
+        optimal_chicken_distance = min(optimal_chicken_distance, total_city_chicken_distance)
+    return optimal_chicken_distance     
 
 if __name__ == "__main__":
     N, M, MAP = input_getter()
     house_indicies, chickens_indicies = get_direct_accessing_information(MAP, N)
+    answer = float('inf')
     for m in range(1, M+1):
         """각각의 m을 시도해보고, 최대 m을 답으로 출력하자."""
+        local_minimum = compute_minimum_chicken_distance(MAP, N, M, house_indicies, chickens_indicies)
+        answer = min(answer, local_minimum)
+    print(answer)
         
 
