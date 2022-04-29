@@ -331,7 +331,7 @@ def find_connected_components(MAP):
     return global_components_indicies
                     
 
-#3 활용하는 기능 등                      
+# 7-3 활용하는 기능 등                      
 def numbering_connected_components(components_indicies, MAP):
     numberedMAP = MAP[:]
     component_numbering = 0
@@ -351,3 +351,28 @@ if __name__ == '__main__':
 
 
 
+# 8 재귀적 DFS로 combinations 구현하기
+# 끝끝내 버티다가 내가 졌다...
+total_combinations = []
+experiment_list = [i for i in range(6)]
+
+
+def combinations(queue, curDepth, r, target_list):
+    global total_combinations
+    if len(queue) == r:
+        total_combinations.append(list(queue))
+        return
+    
+    elif curDepth == len(target_list):
+        return
+    
+    queue.append(target_list[curDepth])
+
+    combinations(queue, curDepth+1, r, target_list)
+
+    queue.pop()
+    combinations(queue, curDepth+1, r, target_list)
+
+combinations(deque(), 0, 3, experiment_list)
+
+print(total_combinations)
