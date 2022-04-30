@@ -1,4 +1,6 @@
 # 낚시왕
+import sys
+sys.setrecursionlimit(10**6)
 
 def input_getter():
     R, C, M = map(int, input().split(' '))
@@ -41,8 +43,10 @@ def directionChanger(direction):
 """
 런타임 에러 : ValueError가 발생하였다. 아마, remove하려고 했는데 remove의 대상이 없어서 생긴 것일 것이다.
 """
-
+from collections import deque
 def sharkMove(MAP, sharks_data, R, C):
+    global total_combinations_list
+
     """sharkmoving for 1 timestep"""
     if sharks_data:
         for sh in range(len(sharks_data)):
@@ -70,28 +74,38 @@ def sharkMove(MAP, sharks_data, R, C):
             sharks_data[sh] = [tmp_r, tmp_c, s, d, z]
 
         goodbye_sharks_list = []
-        # Q : 상어가 다 잡힌 경우는??
-        for i in range(0,len(sharks_data)-1):
-            shark_one = sharks_data[i]
-            for j in range(i+1, len(sharks_data)):
-                shark_two = sharks_data[j]
-                if (shark_one[0] == shark_two[0]) and (shark_one[1] == shark_two[1]):
+        # # Q : 상어가 다 잡힌 경우는??
+        # for i in range(0,len(sharks_data)-1):
+        #     shark_one = sharks_data[i]
+        #     for j in range(i+1, len(sharks_data)):
+        #         shark_two = sharks_data[j]
+        #         if (shark_one[0] == shark_two[0]) and (shark_one[1] == shark_two[1]):
+        #             if shark_one[4] > shark_two[4]:
+        #                 goodbye_sharks_list.append(shark_two)
+        #             elif shark_one[4] < shark_two[4]:
+        #                 goodbye_sharks_list.append(shark_one)
+        
+        total_combinations_list = []
+        combinations(deque(), 0, 2, sharks_data)
+        for shark_comb in total_combinations_list:
+            shark_one, shark_two = shark_comb[0], shark_comb[1]
+            if (shark_one[0] == shark_two[0]) and (shark_one[1] == shark_two[1]):
                     if shark_one[4] > shark_two[4]:
-                        goodbye_sharks_list.append(j)
+                        goodbye_sharks_list.append(shark_two)
                     elif shark_one[4] < shark_two[4]:
-                        goodbye_sharks_list.append(i)
+                        goodbye_sharks_list.append(shark_one)
 
         new_sharks_data = sharks_data[:]
         # print(f"sharks_data : {sharks_data}")
         # print(f"goodbye sharks! {goodbye_sharks_list}\n")
         if new_sharks_data:
-            for idx in goodbye_sharks_list:
-                # old_r, old_c = tmp_sharks_data[idx]
-                curShark = sharks_data[idx]
+            if goodbye_sharks_list:
+                for gbyeSharks in goodbye_sharks_list:
+                    # old_r, old_c = tmp_sharks_data[idx]
 
-                # MAP[old_r][old_c] = 0
+                    # MAP[old_r][old_c] = 0
 
-                new_sharks_data.remove(curShark)
+                    new_sharks_data.remove(gbyeSharks)
 
         MAP = [[0]*C for _ in range(R)] # 지울 필요 없이 초기화
         # print(f"shark moved! before updating MAP: {sharks_data}")
@@ -107,6 +121,23 @@ def MAP_printer(MAP):
     for row in MAP:
         print(row)
     print()
+
+total_combinations_list = []
+def combinations(queue, depth, r, target_list):
+    global total_combinations_list
+    n = len(target_list)
+    if len(queue)==r:
+        total_combinations_list.append(list(queue))
+        return
+
+    elif depth == n:
+        return
+    
+    queue.append(target_list[depth])
+    combinations(queue, depth+1, r, target_list)
+
+    queue.pop()
+    combinations(queue, depth+1, r, target_list)
 
 def rotatedMAPIndexTransformer(fishingKingPos, C):
     fishingKingPos = C -1 - fishingKingPos
@@ -206,4 +237,5 @@ if __name__ == "__main__":
 
 3. iteration 돌리는 것은 함수 밖에서 하는 버릇을 들이자.
 4. r,c 등을 애초에 input에서 받아올 때 1씩 빼놓는 버릇을 들이자.
+5. 0에 대한 예외 처리 조건이 필요한지 반드시 확인하자.
 """
