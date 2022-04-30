@@ -377,3 +377,14 @@ combinations(deque(), 0, 3, experiment_list)
 
 print(total_combinations)
 
+# 9 우연히 발견한 3차원 리스트 초기화 방법:
+MAP = [[[] for i in range(5)] for j in range(5)]
+
+def MAP_printer(MAP):
+    for row in MAP:
+        print(row)
+    print()
+
+MAP[1][2].append(999)
+
+MAP_printer(MAP)

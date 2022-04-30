@@ -1,25 +1,18 @@
-from collections import deque
+threeDMAP = [[[]for i in range(5)] for j in range(5)]
+import copy
+# dup_threeDMAP = copy.deepcopy(threeDMAP)
+def mapDup(MAP):
+    dupMAP = MAP[:]
 
-total_combinations_list = []
-
-def combinations(queue, depth, r, target_list):
-    global total_combinations_list
-    n = len(target_list)
-    if len(queue)==r:
-        total_combinations_list.append(list(queue))
-        return
-
-    elif depth == n:
-        return
+    return dupMAP
     
-    queue.append(target_list[depth])
-    combinations(queue, depth+1, r, target_list)
+dup_threeDMAP = mapDup(threeDMAP)
 
-    queue.pop()
-    combinations(queue, depth+1, r, target_list)
+threeDMAP[1][3].append(53)
 
 
-target = [i+1 for i in range(5)]
 
-combinations(deque(), 0, 2, target)
-print(total_combinations_list)
+
+
+
+print(dup_threeDMAP)
