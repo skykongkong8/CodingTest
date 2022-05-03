@@ -134,3 +134,7 @@ CCWrotatedPiece = list(zip(*piece))[::-1]
 6. range 인덱스 증강 카운트는 마지막이라는 것 (중간인 줄 알았음) 
 7. dfs를 스스로 해내다니 감격스럽다.
 """
+maskLength = 2
+for r in range(0,N, maskLength):
+    for c in range(0,N,maskLength):
+        mask = [[row[c:c+maskLength] for row in MAP[r:r+maskLength]]]
