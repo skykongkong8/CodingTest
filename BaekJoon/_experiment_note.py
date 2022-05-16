@@ -1,24 +1,39 @@
-from dataclasses import dataclass
-from datetime import date
+# Dijkstra algorithm
+import heapq
+from heapq import heappush, heappop
+import sys
 
-class Node:
-    def __init__(self, num : int, createdDate: date, admin: bool = False) -> None:
-        self.num = num
-        self.createDate = createdDate
-        self.admin = admin
+INF = float('inf')
+n, m = map(int, sys.stdin.readline().split(' '))
+start = int(sys.stdin.readline())
 
-    def __repr__(self):
-        return (self.__class__.__qualname__ + f"(num={self.num!r}, createdDate={self.createDate!r}, "
-        f"admin={self.admin!r})"
-        )
+graph = [[]for i in range(n+1)]
+distance = [INF]*n+1
 
-    def __eq__(self, other):
-        if other.__class__ is self.__class__:
-            return (self.num, self.createDate, self.admin) == (other.num, other.createDate, other.admin)
+for _ in range(m):
+    a,b,c = map(int, sys.stdin.readline().split(' '))
+    graph[a].append(b,c)
 
-        return NotImplemented
-    
-my_node = Node(1, date(1998,4,16), admin = True)
-my_node2 = Node(1, date(1998,4,16), admin = True)
+def dijkstra(start):
+    minheap = heapq()
+    heappush(minheap, (0, start))
+    distance[start] = 0
+    while minheap:
+        dist, now = heappop(minheap)
+        if distance[now] < dist:
+            continue
+        for i in graph[now]:
+            cost = dist + i[1]
+            if cost < distance[i[0]]:
+                distance[i[0]] = cost
+                heappush(minheap, (cost, i[0]))
+dijkstra(start)
 
-print(my_node == my_node2)
+# 모든 노드로 가기 위한 최단 거리를 출력
+for i in range(1, n+1):
+    # 도달할 수 없는 경우, 무한(INFINITY)이라고 출력
+    if distance[i] == INF:
+        print("INFINITY")
+    # 도달할 수 있는 경우, 거리를 출력
+    else:
+        print(distance[i])
